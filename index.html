@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Die Primel Eiscafé - Stundenplan</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Primel Plan">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-title">
+                <h1>Die Primel Eiscafé</h1>
+                <p class="subtitle" id="currentDateInfo">Stundenplan für aktuelle Woche, Monat und Jahr</p>
+            </div>
+            <button class="hamburger" id="hamburgerBtn" aria-label="Menü">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </header>
+
+        <!-- Sidebar Menu -->
+        <nav class="sidebar" id="sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="index.html" class="active">Stundenplan anzeigen</a></li>
+                <li><a href="admin.html">Admin-Bereich</a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="schedule-info">
+                <h2 id="scheduleNameDisplay">Aktueller Stundenplan</h2>
+                <p id="currentScheduleName" class="schedule-name">-</p>
+                <button id="exportPdfBtn" class="btn-pdf">📄 Als PDF speichern</button>
+            </div>
+            <div class="table-wrapper" id="scheduleTableWrapper">
+                <div class="loading">Lade Stundenplan...</div>
+            </div>
+        </main>
+    </div>
+
+    <script src="storage.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

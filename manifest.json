@@ -1,0 +1,17 @@
+{
+  "name": "Die Primel Eiscafé Stundenplan",
+  "short_name": "Primel Plan",
+  "description": "Stundenplan Verwaltung für Die Primel Eiscafé",
+  "start_url": "index.html",
+  "display": "standalone",
+  "orientation": "landscape",
+  "theme_color": "#667eea",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}

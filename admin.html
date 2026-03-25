@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Admin - Die Primel Eiscafé</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#667eea">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-title">
+                <h1>Die Primel Eiscafé - Admin</h1>
+                <p class="subtitle">Stundenplan bearbeiten</p>
+            </div>
+            <button class="hamburger" id="hamburgerBtn" aria-label="Menü">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </header>
+
+        <!-- Sidebar Menu -->
+        <nav class="sidebar" id="sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="index.html">Stundenplan anzeigen</a></li>
+                <li><a href="admin.html" class="active">Admin-Bereich</a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Filter Section -->
+            <div class="filter-section">
+                <label for="scheduleFilter">Gespeicherte Stundenpläne:</label>
+                <select id="scheduleFilter">
+                    <option value="">-- Neuen Plan erstellen --</option>
+                </select>
+                <button id="loadScheduleBtn" class="btn btn-secondary">Laden</button>
+            </div>
+
+            <!-- Workers Management Section -->
+            <section class="workers-section">
+                <h2>Mitarbeiter verwalten</h2>
+                <div class="workers-list" id="workersList"></div>
+                <div class="add-worker-form">
+                    <h3>Neuen Mitarbeiter hinzufügen</h3>
+                    <input type="text" id="workerName" placeholder="Name" maxlength="30">
+                    <input type="color" id="workerColor" value="#4CAF50">
+                    <input type="date" id="workerStartDate" placeholder="Startdatum">
+                    <input type="number" id="workerMonthlyHours" placeholder="Monatliche Stunden (max)" step="0.5">
+                    <input type="number" id="workerHourlyRate" placeholder="Stundenlohn (€)" step="0.5">
+                    <button id="addWorkerBtn" class="btn btn-primary">Mitarbeiter hinzufügen</button>
+                </div>
+            </section>
+
+            <!-- Weekly Schedule Section -->
+            <section class="schedule-section">
+                <h2>Wochenstundenplan</h2>
+                <div class="schedule-actions">
+                    <input type="text" id="saveScheduleName" placeholder="Name speichern (z.B. KW 14)">
+                    <button id="saveScheduleBtn" class="btn btn-primary">Speichern</button>
+                    <button id="clearScheduleBtn" class="btn btn-danger">Komplett leeren</button>
+                </div>
+                <div class="table-wrapper" id="scheduleTableWrapper">
+                    <div class="loading">Lade Tabelle...</div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal für Mitarbeiterauswahl -->
+    <div id="workerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Mitarbeiter für diese Stunde auswählen</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body" id="workerChecklist"></div>
+            <div class="modal-footer">
+                <button id="modalFertigBtn" class="btn btn-primary">Fertig</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="storage.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
