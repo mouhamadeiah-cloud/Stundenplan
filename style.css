@@ -600,3 +600,30 @@ body {
         display: block !important;
     }
 }
+/* Arbeitsgesetz Link Style */
+.arbeitsgesetz-link {
+    display: inline-block;
+    background: #f8f9fa;
+    color: #667eea;
+    padding: 8px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border: 1px solid #e0e0e0;
+    transition: all 0.3s;
+}
+
+.arbeitsgesetz-link:hover {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+    transform: translateY(-2px);
+}
+
+.legal-link {
+    text-align: center;
+    margin-top: 20px;
+    padding: 10px;
+    border-top: 1px solid #e0e0e0;
+}
