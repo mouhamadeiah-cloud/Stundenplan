@@ -36,16 +36,21 @@
 
         <!-- Main Content -->
         <main class="main-content">
-            <div class="schedule-info">
-                <h2 id="scheduleNameDisplay">Aktueller Stundenplan</h2>
-                <p id="currentScheduleName" class="schedule-name">-</p>
-                <button id="exportPdfBtn" class="btn-pdf">📄 Als PDF speichern</button>
-            </div>
-            <div class="table-wrapper" id="scheduleTableWrapper">
-                <div class="loading">Lade Stundenplan...</div>
-            </div>
-        </main>
+        <div class="schedule-info">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+        <div>
+            <h2>Aktueller Stundenplan</h2>
+            <p id="currentScheduleName" class="schedule-name">-</p>
+        </div>
+        <a href="https://www.gesetze-im-internet.de/arbzg/BJNR117100994.html" 
+           target="_blank" 
+           rel="noopener noreferrer" 
+           class="arbeitsgesetz-link">
+           ⚖️ Arbeitsgesetz
+        </a>
     </div>
+    <button id="exportPdfBtn" class="btn-pdf">📄 Als PDF speichern</button>
+</div>
 
     <script src="storage.js"></script>
     <script src="script.js"></script>
