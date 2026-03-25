@@ -5,11 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Die Primel Eiscafé - Stundenplan</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#667eea">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Primel Plan">
 </head>
 <body>
     <div class="app-container">
@@ -36,21 +31,26 @@
 
         <!-- Main Content -->
         <main class="main-content">
-        <div class="schedule-info">
-    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-        <div>
-            <h2>Aktueller Stundenplan</h2>
-            <p id="currentScheduleName" class="schedule-name">-</p>
-        </div>
-        <a href="https://www.gesetze-im-internet.de/arbzg/BJNR117100994.html" 
-           target="_blank" 
-           rel="noopener noreferrer" 
-           class="arbeitsgesetz-link">
-           ⚖️ Arbeitsgesetz
-        </a>
+            <div class="schedule-info">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 10px;">
+                    <div>
+                        <h2>Aktueller Stundenplan</h2>
+                        <p id="currentScheduleName" class="schedule-name">-</p>
+                    </div>
+                    <a href="https://www.gesetze-im-internet.de/arbzg/BJNR117100994.html" 
+                       target="_blank" 
+                       rel="noopener noreferrer" 
+                       class="arbeitsgesetz-link">
+                       ⚖️ Arbeitsgesetz
+                    </a>
+                </div>
+                <button id="exportPdfBtn" class="btn-pdf">📄 Als PDF speichern</button>
+            </div>
+            <div class="table-wrapper" id="scheduleTableWrapper">
+                <div class="loading">Lade Stundenplan...</div>
+            </div>
+        </main>
     </div>
-    <button id="exportPdfBtn" class="btn-pdf">📄 Als PDF speichern</button>
-</div>
 
     <script src="storage.js"></script>
     <script src="script.js"></script>
