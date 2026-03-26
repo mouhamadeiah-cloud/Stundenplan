@@ -49,6 +49,677 @@ body {
     display: flex;
     flex-direction: column;
     gap: 5px;
+    z-index: 101;
+    position: relative;
+}
+
+.hamburger span {
+    width: 25px;
+    height: 3px;
+    background: white;
+    border-radius: 3px;
+    transition: 0.3s;
+}
+
+/* Sidebar - يظهر من اليسار تحت الهامبرغر */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: -280px;
+    width: 280px;
+    height: 100%;
+    background: white;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    transition: left 0.3s ease;
+    z-index: 200;
+    padding-top: 70px;
+}
+
+.sidebar.open {
+    left: 0;
+}
+
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar-menu li a {
+    display: block;
+    padding: 1rem 1.5rem;
+    color: #333;
+    text-decoration: none;
+    transition: background 0.3s;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.sidebar-menu li a:hover,
+.sidebar-menu li a.active {
+    background: #667eea;
+    color: white;
+}
+
+/* Overlay */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 150;
+    display: none;
+}
+
+.overlay.show {
+    display: block;
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    padding: 1rem;
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+/* Sections */
+.workers-section,
+.schedule-section,
+.filter-section {
+    background: white;
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.workers-section h2,
+.schedule-section h2,
+.filter-section h2 {
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+    color: #667eea;
+}
+
+/* Workers List */
+.workers-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.worker-card {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    border-left: 4px solid;
+    min-width: 200px;
+    flex: 1;
+}
+
+.worker-color {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.worker-info {
+    flex: 1;
+}
+
+.worker-name {
+    font-weight: bold;
+    margin-bottom: 0.25rem;
+}
+
+.worker-details {
+    font-size: 0.75rem;
+    color: #666;
+}
+
+.delete-worker {
+    background: #dc3545;
+    color: white;
+    border: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s;
+}
+
+.delete-worker:hover {
+    transform: scale(1.1);
+}
+
+/* Add Worker Form */
+.add-worker-form {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: flex-end;
+}
+
+.add-worker-form input {
+    padding: 0.6rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    flex: 1;
+    min-width: 120px;
+}
+
+/* Buttons */
+.btn {
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s;
+}
+
+.btn-primary {
+    background: #667eea;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #5a67d8;
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #5a6268;
+}
+
+.btn-danger {
+    background: #dc3545;
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #c82333;
+}
+
+/* Week Assign Buttons */
+.btn-week-assign {
+    background: #17a2b8;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s;
+    flex: 1;
+    min-width: 180px;
+}
+
+.btn-week-assign:hover {
+    background: #138496;
+    transform: scale(1.02);
+}
+
+/* Button Container for Index Page */
+.index-buttons-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 15px 0;
+    flex-wrap: wrap;
+}
+
+/* Week Navigation Button - نفس حجم زر PDF */
+.btn-week {
+    background: #ff9800;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s;
+    min-width: 160px;
+}
+
+.btn-week:hover {
+    background: #f57c00;
+    transform: scale(1.02);
+}
+
+/* PDF Button */
+.btn-pdf {
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s;
+    min-width: 160px;
+}
+
+.btn-pdf:hover {
+    background: #218838;
+    transform: scale(1.02);
+}
+
+/* Arbeitsgesetz Link */
+.arbeitsgesetz-link {
+    display: inline-block;
+    background: #f8f9fa;
+    color: #667eea;
+    padding: 8px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border: 1px solid #e0e0e0;
+    transition: all 0.3s;
+}
+
+.arbeitsgesetz-link:hover {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+}
+
+/* Schedule Actions */
+.schedule-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.schedule-actions input {
+    flex: 1;
+    padding: 0.6rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+.filter-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.filter-section select {
+    flex: 1;
+    padding: 0.6rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* Table Styles */
+.table-wrapper {
+    overflow-x: auto;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+    min-width: 600px;
+}
+
+.schedule-table th,
+.schedule-table td {
+    border: 1px solid #ddd;
+    padding: 0.5rem;
+    text-align: center;
+    vertical-align: top;
+    min-width: 80px;
+}
+
+.schedule-table th {
+    background: #f8f9fa;
+    font-weight: bold;
+    position: sticky;
+    top: 0;
+}
+
+.schedule-table td {
+    min-height: 60px;
+    cursor: pointer;
+    background: white;
+}
+
+.schedule-table td:hover {
+    background: #f0f0f0;
+}
+
+/* Cell with multiple workers */
+.cell-workers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+    min-height: 50px;
+}
+
+.worker-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: white;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+    flex: 1;
+    min-width: 40px;
+    white-space: nowrap;
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 300;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 400px;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-header {
+    padding: 1rem;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #999;
+}
+
+.modal-body {
+    padding: 1rem;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.worker-checkbox {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem;
+    margin: 0.25rem 0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.worker-checkbox:hover {
+    background: #f0f0f0;
+}
+
+.worker-checkbox input {
+    margin-right: 0.75rem;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.worker-checkbox .worker-color-dot {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    margin-right: 0.75rem;
+}
+
+.worker-checkbox .worker-name {
+    flex: 1;
+    margin: 0;
+}
+
+.modal-footer {
+    padding: 1rem;
+    border-top: 1px solid #ddd;
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* Schedule Info */
+.schedule-info {
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.schedule-name {
+    color: #667eea;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.loading {
+    text-align: center;
+    padding: 2rem;
+    color: #666;
+}
+
+/* Print styles - for PDF export - إخفاء الأزرار والروابط عند الطباعة */
+@media print {
+    /* إخفاء جميع العناصر غير المرغوب فيها */
+    .header, 
+    .hamburger, 
+    .sidebar, 
+    .filter-section, 
+    .workers-section, 
+    .schedule-actions, 
+    .btn, 
+    .add-worker-form, 
+    .btn-pdf, 
+    #exportPdfBtn,
+    .schedule-info .btn-pdf, 
+    .schedule-info h2,
+    .week-navigation, 
+    .btn-week, 
+    .arbeitsgesetz-link,
+    .week-assign-buttons,
+    .index-buttons-container,
+    #toggleWeekBtn {
+        display: none !important;
+    }
+    
+    .main-content {
+        padding: 0;
+        margin: 0;
+    }
+    
+    .schedule-info p {
+        display: block !important;
+        text-align: center;
+        font-size: 14px;
+        margin-bottom: 20px;
+    }
+    
+    .table-wrapper {
+        margin: 0;
+        padding: 0;
+    }
+    
+    .schedule-table {
+        font-size: 10pt;
+    }
+    
+    .schedule-table th, 
+    .schedule-table td {
+        padding: 4px;
+    }
+    
+    .worker-chip {
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .header-title h1 {
+        font-size: 1rem;
+    }
+    
+    .subtitle {
+        font-size: 0.7rem;
+    }
+    
+    .worker-card {
+        min-width: 100%;
+    }
+    
+    .add-worker-form {
+        flex-direction: column;
+    }
+    
+    .add-worker-form input {
+        width: 100%;
+    }
+    
+    .schedule-table {
+        font-size: 0.7rem;
+    }
+    
+    .schedule-table th,
+    .schedule-table td {
+        padding: 0.3rem;
+        min-width: 60px;
+    }
+    
+    .worker-chip {
+        font-size: 0.6rem;
+        padding: 2px 4px;
+    }
+    
+    .btn-week, .btn-pdf {
+        font-size: 0.8rem;
+        padding: 6px 12px;
+        min-width: 130px;
+    }
+    
+    .btn-week-assign {
+        min-width: 100%;
+    }
+    
+    .index-buttons-container {
+        gap: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .schedule-table {
+        font-size: 0.65rem;
+    }
+    
+    .worker-chip {
+        font-size: 0.55rem;
+    }
+    
+    .btn-week, .btn-pdf {
+        font-size: 0.75rem;
+        padding: 5px 10px;
+        min-width: 110px;
+    }
+}* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: #f5f5f5;
+    color: #333;
+}
+
+.app-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header */
+.header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.header-title h1 {
+    font-size: 1.2rem;
+    margin-bottom: 0.25rem;
+}
+
+.subtitle {
+    font-size: 0.8rem;
+    opacity: 0.9;
+}
+
+/* Hamburger Button */
+.hamburger {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 }
 
 .hamburger span {
