@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const dateInfoElement = document.getElementById('currentDateInfo');
     if (dateInfoElement) {
         const formattedDate = getFormattedWeekInfo(0);
-        dateInfoElement.textContent = `Stundenplan für ${formattedDate}`;
+        dateInfoElement.textContent = `Stundenplan fuer ${formattedDate}`;
     }
     
     // Check which page we're on
@@ -64,7 +64,7 @@ function loadDisplaySchedule(mode) {
     }
     
     if (!scheduleName) {
-        document.getElementById('scheduleTableWrapper').innerHTML = '<div class="loading">Kein Stundenplan für diese Woche vorhanden. Bitte im Admin-Bereich einen Plan zuweisen.</div>';
+        document.getElementById('scheduleTableWrapper').innerHTML = '<div class="loading">Kein Stundenplan fuer diese Woche vorhanden. Bitte im Admin-Bereich einen Plan zuweisen.</div>';
         document.getElementById('currentScheduleName').textContent = getFormattedWeekInfo(mode === 'current' ? 0 : 1);
         return;
     }
@@ -85,7 +85,6 @@ function loadDisplaySchedule(mode) {
 function initToggleButton() {
     const toggleBtn = document.getElementById('toggleWeekBtn');
     if (toggleBtn) {
-        // Remove existing listeners
         const newBtn = toggleBtn.cloneNode(true);
         toggleBtn.parentNode.replaceChild(newBtn, toggleBtn);
         newBtn.addEventListener('click', () => {
@@ -94,7 +93,7 @@ function initToggleButton() {
                 newBtn.textContent = '← Aktuelle Woche';
             } else {
                 loadDisplaySchedule('current');
-                newBtn.textContent = 'Nächste Woche →';
+                newBtn.textContent = 'Naechste Woche →';
             }
         });
     }
@@ -140,11 +139,11 @@ function renderScheduleTableReadOnly(scheduleData) {
         hours.push(`${i}:00 - ${i+1}:00`);
     }
     
-    let html = '<table class="schedule-table"><thead>资本<th>Uhrzeit / Tag</th>';
+    let html = '<table class="schedule-table"><thead><tr><th>Uhrzeit / Tag</th>';
     days.forEach(day => {
         html += `<th>${day}</th>`;
     });
-    html += ' </thead><tbody>';
+    html += '</tr></thead><tbody>';
     
     hours.forEach(hour => {
         html += `<tr><th>${hour}</th>`;
@@ -240,7 +239,7 @@ function setAsNextWeek() {
         return;
     }
     setNextWeekSchedule(currentScheduleName);
-    alert(`"${currentScheduleName}" wurde als nächster Wochenplan gespeichert.`);
+    alert(`"${currentScheduleName}" wurde als naechster Wochenplan gespeichert.`);
 }
 
 function loadWorkers() {
@@ -296,12 +295,12 @@ function addNewWorker() {
     }
     
     if (isNaN(monthlyHours) || monthlyHours <= 0) {
-        alert('Bitte geben Sie gültige monatliche Stunden ein');
+        alert('Bitte geben Sie gueltige monatliche Stunden ein');
         return;
     }
     
     if (isNaN(hourlyRate) || hourlyRate <= 0) {
-        alert('Bitte geben Sie einen gültigen Stundenlohn ein');
+        alert('Bitte geben Sie einen gueltigen Stundenlohn ein');
         return;
     }
     
@@ -353,26 +352,26 @@ function renderScheduleTable(scheduleData, readonly = false) {
         hours.push(`${i}:00 - ${i+1}:00`);
     }
     
-    let html = '<table class="schedule-table"><thead>资本<th>Uhrzeit / Tag</th>';
+    let html = '<table class="schedule-table"><thead><tr><th>Uhrzeit / Tag</th>';
     days.forEach(day => {
         html += `<th>${day}</th>`;
     });
-    html += ' </thead><tbody>';
+    html += '</tr></thead><tbody>';
     
     hours.forEach(hour => {
         html += `<tr><th>${hour}</th>`;
         days.forEach(day => {
             const workers = scheduleData[day]?.[hour] || [];
             if (readonly) {
-                html += `<td>${renderCellContent(workers)}一面`;
+                html += `<td>${renderCellContent(workers)}</td>`;
             } else {
                 html += `<td class="editable-cell" data-day="${day}" data-hour="${hour}">${renderCellContent(workers)}</td>`;
             }
         });
-        html += '同行';
+        html += '</tr>';
     });
     
-    html += '</tbody>\\table';
+    html += '</tbody></table>';
     wrapper.innerHTML = html;
     
     if (!readonly) {
@@ -388,7 +387,7 @@ function renderScheduleTable(scheduleData, readonly = false) {
 
 function openWorkerModal(day, hour) {
     if (currentWorkers.length === 0) {
-        alert('Bitte fügen Sie zuerst Mitarbeiter hinzu');
+        alert('Bitte fuegen Sie zuerst Mitarbeiter hinzu');
         return;
     }
     
@@ -428,7 +427,7 @@ function getSelectedWorkersFromModal() {
 function saveCurrentSchedule() {
     const name = document.getElementById('saveScheduleName').value.trim();
     if (!name) {
-        alert('Bitte geben Sie einen Namen für den Stundenplan ein');
+        alert('Bitte geben Sie einen Namen fuer den Stundenplan ein');
         return;
     }
     
@@ -445,7 +444,7 @@ function saveCurrentSchedule() {
 }
 
 function clearSchedule() {
-    if (confirm('Möchten Sie den gesamten Stundenplan leeren?')) {
+    if (confirm('Moechten Sie den gesamten Stundenplan leeren?')) {
         currentScheduleData = getEmptySchedule();
         renderScheduleTable(currentScheduleData, false);
     }
@@ -467,7 +466,7 @@ function loadSelectedSchedule() {
     const selectedName = filter.value;
     
     if (!selectedName) {
-        if (confirm('Möchten Sie einen neuen leeren Stundenplan erstellen?')) {
+        if (confirm('Moechten Sie einen neuen leeren Stundenplan erstellen?')) {
             currentScheduleData = getEmptySchedule();
             renderScheduleTable(currentScheduleData, false);
             setCurrentScheduleName('');
