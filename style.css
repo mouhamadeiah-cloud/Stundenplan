@@ -696,3 +696,67 @@ body {
         font-size: 0.5rem;
     }
 }
+/* Table Container with Sticky Headers */
+.table-wrapper {
+    overflow-x: auto;
+    overflow-y: auto;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    position: relative;
+    max-height: 70vh;
+}
+
+.schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.75rem;
+    min-width: 600px;
+}
+
+/* Sticky Header Row (Days) */
+.schedule-table thead tr th {
+    background: #f8f9fa;
+    font-weight: bold;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    border-bottom: 2px solid #ddd;
+}
+
+/* Sticky First Column (Hours) */
+.schedule-table tbody tr th:first-child {
+    background: #f8f9fa;
+    font-weight: bold;
+    position: sticky;
+    left: 0;
+    z-index: 5;
+    border-right: 2px solid #ddd;
+}
+
+/* For the top-left corner cell (both sticky) */
+.schedule-table thead tr th:first-child {
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 20;
+    background: #f8f9fa;
+}
+/* Mobile Optimization for Sticky Headers */
+@media (max-width: 768px) {
+    .table-wrapper {
+        max-height: 60vh;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .schedule-table thead tr th {
+        padding: 0.5rem 0.3rem;
+        font-size: 0.7rem;
+        white-space: nowrap;
+    }
+    
+    .schedule-table tbody tr th:first-child {
+        font-size: 0.7rem;
+        padding: 0.5rem 0.3rem;
+        white-space: nowrap;
+    }
+}
