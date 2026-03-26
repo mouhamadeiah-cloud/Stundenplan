@@ -85,13 +85,16 @@ function loadDisplaySchedule(mode) {
 function initToggleButton() {
     const toggleBtn = document.getElementById('toggleWeekBtn');
     if (toggleBtn) {
-        toggleBtn.addEventListener('click', () => {
+        // Remove existing listeners
+        const newBtn = toggleBtn.cloneNode(true);
+        toggleBtn.parentNode.replaceChild(newBtn, toggleBtn);
+        newBtn.addEventListener('click', () => {
             if (currentDisplayMode === 'current') {
                 loadDisplaySchedule('next');
-                toggleBtn.textContent = '← Aktuelle Woche';
+                newBtn.textContent = '← Aktuelle Woche';
             } else {
                 loadDisplaySchedule('current');
-                toggleBtn.textContent = 'Nächste Woche →';
+                newBtn.textContent = 'Nächste Woche →';
             }
         });
     }
