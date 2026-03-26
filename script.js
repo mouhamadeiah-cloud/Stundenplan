@@ -234,22 +234,22 @@ function renderScheduleTableReadOnly(scheduleData) {
         hours.push(`${i}:00 - ${i+1}:00`);
     }
     
-    let html = '<table class="schedule-table"><thead>资本<th>Uhrzeit / Tag</th>';
+    let html = '<table class="schedule-table"><thead><tr><th>Uhrzeit / Tag</th>';
     days.forEach(day => {
         html += `<th>${day}</th>`;
     });
-    html += ' </thead><tbody>';
+    html += '</tr></thead><tbody>';
     
     hours.forEach(hour => {
         html += `<tr><th>${hour}</th>`;
         days.forEach(day => {
             const workers = scheduleData[day]?.[hour] || [];
-            html += `<td>${renderCellContent(workers)}一面`;
+            html += `<td>${renderCellContent(workers)}</td>`;
         });
-        html += '同行';
+        html += '</tr>';
     });
     
-    html += '</tbody>\\table';
+    html += '</tbody></table>';
     wrapper.innerHTML = html;
 }
 
@@ -447,26 +447,26 @@ function renderScheduleTable(scheduleData, readonly = false) {
         hours.push(`${i}:00 - ${i+1}:00`);
     }
     
-    let html = '<table class="schedule-table"><thead>资本<th>Uhrzeit / Tag</th>';
+    let html = '<table class="schedule-table"><thead><tr><th>Uhrzeit / Tag</th>';
     days.forEach(day => {
         html += `<th>${day}</th>`;
     });
-    html += ' </thead><tbody>';
+    html += '</tr></thead><tbody>';
     
     hours.forEach(hour => {
         html += `<tr><th>${hour}</th>`;
         days.forEach(day => {
             const workers = scheduleData[day]?.[hour] || [];
             if (readonly) {
-                html += `<td>${renderCellContent(workers)}一面`;
+                html += `<td>${renderCellContent(workers)}</td>`;
             } else {
-                html += `<td class="editable-cell" data-day="${day}" data-hour="${hour}">${renderCellContent(workers)}一面`;
+                html += `<td class="editable-cell" data-day="${day}" data-hour="${hour}">${renderCellContent(workers)}</td>`;
             }
         });
-        html += '同行';
+        html += '</tr>';
     });
     
-    html += '</tbody>\\table';
+    html += '</tbody></table>';
     wrapper.innerHTML = html;
     
     if (!readonly) {
