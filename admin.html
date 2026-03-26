@@ -32,13 +32,7 @@
         <!-- Main Content -->
         <main class="main-content">
             <!-- Filter Section -->
-            <div class="filter-section">
-                <label for="scheduleFilter">Gespeicherte Stundenpläne:</label>
-                <select id="scheduleFilter">
-                    <option value="">-- Neuen Plan erstellen --</option>
-                </select>
-                <button id="loadScheduleBtn" class="btn btn-secondary">Laden</button>
-            </div>
+           
 
             <!-- Workers Management Section -->
             <section class="workers-section">
@@ -58,6 +52,13 @@
             <!-- Weekly Schedule Section -->
             <section class="schedule-section">
                 <h2>Wochenstundenplan</h2>
+ <div class="filter-section">
+                <label for="scheduleFilter">Gespeicherte Stundenpläne:</label>
+                <select id="scheduleFilter">
+                    <option value="">-- Neuen Plan erstellen --</option>
+                </select>
+                <button id="loadScheduleBtn" class="btn btn-secondary">Laden</button>
+            </div>
                 <div class="schedule-actions">
                     <input type="text" id="saveScheduleName" placeholder="Name speichern (z.B. KW 14)">
                     <button id="saveScheduleBtn" class="btn btn-primary">Speichern</button>
@@ -65,9 +66,9 @@
                 </div>
                 
                 <!-- Week Assignment Buttons -->
-                <div class="week-assign-buttons" style="display: flex; gap: 10px; margin: 15px 0; flex-wrap: wrap;">
-                    <button id="setAsCurrentWeekBtn" class="btn btn-week-assign">📅 Als aktuelle Woche speichern</button>
-                    <button id="setAsNextWeekBtn" class="btn btn-week-assign">📅 Als nächste Woche speichern</button>
+                <div class="week-assign-buttons">
+                    <button id="setAsCurrentWeekBtn" class="btn-week-assign">📅 Als aktuelle Woche speichern</button>
+                    <button id="setAsNextWeekBtn" class="btn-week-assign">📅 Als nächste Woche speichern</button>
                 </div>
                 
                 <div class="table-wrapper" id="scheduleTableWrapper">
