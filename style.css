@@ -188,6 +188,24 @@ body {
     background: #218838;
 }
 
+/* WhatsApp Button */
+.btn-whatsapp {
+    background: #25D366;
+    color: white;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.btn-whatsapp:hover {
+    background: #128C7E;
+    transform: scale(1.02);
+}
+
 .arbeitsgesetz-link {
     display: inline-block;
     background: #f0f0f0;
@@ -576,7 +594,8 @@ body {
     .header, .hamburger, .sidebar, .filter-section, 
     .workers-section, .schedule-actions, .btn, 
     .add-worker-form, .btn-pdf, #exportPdfBtn,
-    .btn-week, .arbeitsgesetz-link, .week-assign-buttons,
+    .btn-week, .btn-whatsapp, #whatsappBtn,
+    .arbeitsgesetz-link, .week-assign-buttons,
     .action-buttons, .top-bar .schedule-title h2,
     #toggleWeekBtn {
         display: none !important;
@@ -662,7 +681,7 @@ body {
         min-width: 30px;
     }
     
-    .btn-week, .btn-pdf, .arbeitsgesetz-link {
+    .btn-week, .btn-pdf, .btn-whatsapp, .arbeitsgesetz-link {
         font-size: 0.7rem;
         padding: 5px 10px;
     }
