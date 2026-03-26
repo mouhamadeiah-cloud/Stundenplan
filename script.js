@@ -121,6 +121,9 @@ function initWhatsAppButton() {
             e.preventDefault();
             sendToWhatsApp();
         });
+        console.log('WhatsApp button initialized');
+    } else {
+        console.log('WhatsApp button not found');
     }
 }
 
