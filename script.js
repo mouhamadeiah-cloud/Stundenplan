@@ -157,14 +157,14 @@ function sendToWhatsApp() {
     const rows = table.querySelectorAll('tr');
     let message = `*${cafeName}*\n*${scheduleName}*\n\n`;
     
-    rows.forEach((row, rowIndex) => {
+    rows.forEach((row) => {
         const cells = row.querySelectorAll('th, td');
         const rowData = [];
         cells.forEach(cell => {
             let cellText = cell.innerText.trim();
-            // Clean up cell text (remove extra spaces and newlines)
+            // Clean up cell text
             cellText = cellText.replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
-            if (cellText === '-') cellText = '—';
+            if (cellText === '-' || cellText === '—') cellText = '—';
             rowData.push(cellText);
         });
         
@@ -175,7 +175,6 @@ function sendToWhatsApp() {
     
     // Add footer
     message += `\n📅 Erstellt am: ${new Date().toLocaleString('de-DE')}`;
-    message += `\n🔗 Die Primel Eiscafé Stundenplan`;
     
     // Encode for WhatsApp
     const encodedMessage = encodeURIComponent(message);
