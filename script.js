@@ -158,26 +158,53 @@ function sendToWhatsApp() {
     
     // Extract table content
     const rows = table.querySelectorAll('tr');
-    let message = `*${cafeName}*\n*${scheduleName}*\n\n`;
+    let message = `🏪 ${cafeName}\n📅 ${scheduleName}\n\n`;
+    message += `═══════════════════════════════════════════\n`;
     
-    rows.forEach((row) => {
+    rows.forEach((row, index) => {
         const cells = row.querySelectorAll('th, td');
         const rowData = [];
         cells.forEach(cell => {
             let cellText = cell.innerText.trim();
-            // Clean up cell text
             cellText = cellText.replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
-            if (cellText === '-' || cellText === '—') cellText = '—';
+            if (cellText === '-' || cellText === '—' || cellText === '') {
+                cellText = '✗';
+            }
             rowData.push(cellText);
         });
         
         if (rowData.length > 0) {
-            message += rowData.join(' | ') + '\n';
+            if (index === 0) {
+                // Header
+                message += `${rowData[0]}\t`;
+                for (let i = 1; i < rowData.length; i++) {
+                    message += `${rowData[i]}\t`;
+                }
+                message += `\n${'─'.repeat(50)}\n`;
+            } else {
+                // Data rows
+                let timeSlot = rowData[0];
+                message += `${timeSlot.padEnd(12)} │ `;
+                let hasWorkers = false;
+                for (let i = 1; i < rowData.length; i++) {
+                    if (rowData[i] !== '✗') {
+                        message += `👤 ${rowData[i]}  `;
+                        hasWorkers = true;
+                    } else {
+                        message += `◻  `;
+                    }
+                }
+                if (!hasWorkers) {
+                    message += `(frei)`;
+                }
+                message += `\n`;
+            }
         }
     });
     
-    // Add footer
-    message += `\n📅 Erstellt am: ${new Date().toLocaleString('de-DE')}`;
+    message += `═══════════════════════════════════════════\n`;
+    message += `📅 Erstellt: ${new Date().toLocaleString('de-DE')}\n`;
+    message += `🏪 Die Primel Eiscafé`;
     
     // Encode for WhatsApp
     const encodedMessage = encodeURIComponent(message);
