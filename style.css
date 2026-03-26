@@ -257,6 +257,44 @@ body {
     background: #c82333;
 }
 
+/* Week Assign Buttons */
+.btn-week-assign {
+    background: #17a2b8;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s;
+    flex: 1;
+    min-width: 180px;
+}
+
+.btn-week-assign:hover {
+    background: #138496;
+    transform: scale(1.02);
+}
+
+/* Week Navigation Button */
+.btn-week {
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: all 0.3s;
+    min-width: 180px;
+}
+
+.btn-week:hover {
+    background: #5a67d8;
+    transform: scale(1.02);
+}
+
 /* PDF Button */
 .btn-pdf {
     background: #28a745;
@@ -268,11 +306,33 @@ body {
     font-size: 14px;
     margin-top: 10px;
     transition: all 0.3s;
+    width: 100%;
+    max-width: 200px;
 }
 
 .btn-pdf:hover {
     background: #218838;
     transform: scale(1.02);
+}
+
+/* Arbeitsgesetz Link */
+.arbeitsgesetz-link {
+    display: inline-block;
+    background: #f8f9fa;
+    color: #667eea;
+    padding: 8px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border: 1px solid #e0e0e0;
+    transition: all 0.3s;
+}
+
+.arbeitsgesetz-link:hover {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
 }
 
 /* Schedule Actions */
@@ -462,11 +522,13 @@ body {
 /* Schedule Info */
 .schedule-info {
     margin-bottom: 1rem;
+    text-align: center;
 }
 
 .schedule-name {
     color: #667eea;
     font-weight: bold;
+    font-size: 1.2rem;
 }
 
 .loading {
@@ -480,7 +542,9 @@ body {
     .header, .hamburger, .sidebar, .filter-section, 
     .workers-section, .schedule-actions, .btn, 
     .add-worker-form, .btn-pdf, #exportPdfBtn,
-    .schedule-info .btn-pdf, .schedule-info h2 {
+    .schedule-info .btn-pdf, .schedule-info h2,
+    .week-navigation, .btn-week, .arbeitsgesetz-link,
+    .week-assign-buttons {
         display: none !important;
     }
     
@@ -552,6 +616,16 @@ body {
         font-size: 0.6rem;
         padding: 2px 4px;
     }
+    
+    .btn-week {
+        font-size: 0.9rem;
+        padding: 8px 16px;
+        min-width: 140px;
+    }
+    
+    .btn-week-assign {
+        min-width: 100%;
+    }
 }
 
 @media (max-width: 480px) {
@@ -562,68 +636,4 @@ body {
     .worker-chip {
         font-size: 0.55rem;
     }
-}
-/* PDF Print Header Styles */
-.pdf-header {
-    text-align: center;
-    margin-bottom: 20px;
-    padding: 10px;
-    font-family: Arial, sans-serif;
-}
-
-.pdf-header h1 {
-    color: #667eea;
-    font-size: 18px;
-    margin: 0;
-}
-
-.pdf-header .pdf-subtitle {
-    font-size: 14px;
-    color: #666;
-    margin: 5px 0;
-}
-
-.pdf-header .pdf-schedule-name {
-    font-size: 16px;
-    font-weight: bold;
-    margin: 10px 0;
-}
-
-.pdf-header .pdf-date-info {
-    font-size: 12px;
-    color: #888;
-    margin-top: 5px;
-}
-
-@media print {
-    .pdf-header {
-        display: block !important;
-    }
-}
-/* Arbeitsgesetz Link Style */
-.arbeitsgesetz-link {
-    display: inline-block;
-    background: #f8f9fa;
-    color: #667eea;
-    padding: 8px 16px;
-    border-radius: 6px;
-    text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 500;
-    border: 1px solid #e0e0e0;
-    transition: all 0.3s;
-}
-
-.arbeitsgesetz-link:hover {
-    background: #667eea;
-    color: white;
-    border-color: #667eea;
-    transform: translateY(-2px);
-}
-
-.legal-link {
-    text-align: center;
-    margin-top: 20px;
-    padding: 10px;
-    border-top: 1px solid #e0e0e0;
 }
