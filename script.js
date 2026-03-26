@@ -51,6 +51,7 @@ function initIndexPage() {
     loadDisplaySchedule('current');
     initToggleButton();
     initIndexPdfButton();
+    initWhatsAppButton();
 }
 
 function loadDisplaySchedule(mode) {
@@ -111,6 +112,18 @@ function initIndexPdfButton() {
     }
 }
 
+function initWhatsAppButton() {
+    const whatsappBtn = document.getElementById('whatsappBtn');
+    if (whatsappBtn) {
+        const newBtn = whatsappBtn.cloneNode(true);
+        whatsappBtn.parentNode.replaceChild(newBtn, whatsappBtn);
+        newBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            sendToWhatsApp();
+        });
+    }
+}
+
 function exportToPDF() {
     const tableWrapper = document.querySelector('.table-wrapper');
     const scheduleName = document.getElementById('currentScheduleName').textContent;
@@ -126,6 +139,50 @@ function exportToPDF() {
     setTimeout(() => {
         document.title = originalTitle;
     }, 1000);
+}
+
+function sendToWhatsApp() {
+    // Get current schedule info
+    const scheduleName = document.getElementById('currentScheduleName').textContent;
+    const cafeName = 'Die Primel Eiscafé';
+    
+    // Get the table data
+    const table = document.querySelector('.schedule-table');
+    if (!table) {
+        alert('Kein Stundenplan zum Senden vorhanden.');
+        return;
+    }
+    
+    // Extract table content
+    const rows = table.querySelectorAll('tr');
+    let message = `*${cafeName}*\n*${scheduleName}*\n\n`;
+    
+    rows.forEach((row, rowIndex) => {
+        const cells = row.querySelectorAll('th, td');
+        const rowData = [];
+        cells.forEach(cell => {
+            let cellText = cell.innerText.trim();
+            // Clean up cell text (remove extra spaces and newlines)
+            cellText = cellText.replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
+            if (cellText === '-') cellText = '—';
+            rowData.push(cellText);
+        });
+        
+        if (rowData.length > 0) {
+            message += rowData.join(' | ') + '\n';
+        }
+    });
+    
+    // Add footer
+    message += `\n📅 Erstellt am: ${new Date().toLocaleString('de-DE')}`;
+    message += `\n🔗 Die Primel Eiscafé Stundenplan`;
+    
+    // Encode for WhatsApp
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `https://wa.me/?text=${encodedMessage}`;
+    
+    // Open WhatsApp
+    window.open(whatsappUrl, '_blank');
 }
 
 // Render schedule table for readonly view
