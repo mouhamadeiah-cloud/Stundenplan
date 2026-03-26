@@ -2,7 +2,9 @@
 const STORAGE_KEYS = {
     WORKERS: 'primel_workers',
     SCHEDULES: 'primel_schedules',
-    CURRENT_SCHEDULE: 'primel_current_schedule'
+    CURRENT_SCHEDULE: 'primel_current_schedule',
+    CURRENT_WEEK_SCHEDULE: 'primel_current_week_schedule',
+    NEXT_WEEK_SCHEDULE: 'primel_next_week_schedule'
 };
 
 // Worker functions
@@ -64,6 +66,18 @@ function saveSchedule(name, scheduleData) {
     }
 }
 
+function saveScheduleWithName(name, scheduleData) {
+    try {
+        const schedules = getSchedules();
+        schedules[name] = scheduleData;
+        localStorage.setItem(STORAGE_KEYS.SCHEDULES, JSON.stringify(schedules));
+        return schedules;
+    } catch (e) {
+        console.error('Error saving schedule:', e);
+        return {};
+    }
+}
+
 function getCurrentScheduleName() {
     return localStorage.getItem(STORAGE_KEYS.CURRENT_SCHEDULE) || '';
 }
@@ -93,10 +107,46 @@ function getLatestSchedule() {
     return null;
 }
 
+// Week assignment functions
+function setCurrentWeekSchedule(scheduleName) {
+    localStorage.setItem(STORAGE_KEYS.CURRENT_WEEK_SCHEDULE, scheduleName);
+}
+
+function getCurrentWeekSchedule() {
+    return localStorage.getItem(STORAGE_KEYS.CURRENT_WEEK_SCHEDULE) || null;
+}
+
+function setNextWeekSchedule(scheduleName) {
+    localStorage.setItem(STORAGE_KEYS.NEXT_WEEK_SCHEDULE, scheduleName);
+}
+
+function getNextWeekSchedule() {
+    return localStorage.getItem(STORAGE_KEYS.NEXT_WEEK_SCHEDULE) || null;
+}
+
+// Date functions
 function getCurrentWeekNumber() {
     const now = new Date();
     const start = new Date(now.getFullYear(), 0, 1);
     const days = Math.floor((now - start) / (24 * 60 * 60 * 1000));
+    return Math.ceil((days + start.getDay() + 1) / 7);
+}
+
+function getFormattedWeekInfo(offsetWeeks = 0) {
+    const now = new Date();
+    const targetDate = new Date(now);
+    targetDate.setDate(now.getDate() + (offsetWeeks * 7));
+    
+    const weekNumber = getWeekNumberForDate(targetDate);
+    const month = targetDate.toLocaleString('de-DE', { month: 'long' });
+    const year = targetDate.getFullYear();
+    
+    return `KW ${weekNumber} ${month} ${year}`;
+}
+
+function getWeekNumberForDate(date) {
+    const start = new Date(date.getFullYear(), 0, 1);
+    const days = Math.floor((date - start) / (24 * 60 * 60 * 1000));
     return Math.ceil((days + start.getDay() + 1) / 7);
 }
 
