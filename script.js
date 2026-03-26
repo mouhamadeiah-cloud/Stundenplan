@@ -112,73 +112,79 @@ function initIndexPdfButton() {
     }
 }
 
+function exportToPDF() {
+    const tableWrapper = document.querySelector('.table-wrapper');
+    const scheduleName = document.getElementById('currentScheduleName').textContent;
+    
+    if (!tableWrapper || tableWrapper.innerHTML.includes('Kein Stundenplan') || tableWrapper.innerHTML.includes('Lade Stundenplan')) {
+        alert('Kein Stundenplan zum Exportieren vorhanden.');
+        return;
+    }
+    
+    const originalTitle = document.title;
+    document.title = `${scheduleName} - Die Primel Eiscafé`;
+    window.print();
+    setTimeout(() => {
+        document.title = originalTitle;
+    }, 1000);
+}
+
+function initWhatsAppButton() {
+    const whatsappBtn = document.getElementById('whatsappBtn');
+    if (whatsappBtn) {
+        const newBtn = whatsappBtn.cloneNode(true);
+        whatsappBtn.parentNode.replaceChild(newBtn, whatsappBtn);
+        newBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            sendToWhatsApp();
+        });
+    }
+}
+
 function sendToWhatsApp() {
-    // Get current schedule info
     const scheduleName = document.getElementById('currentScheduleName').textContent;
     const cafeName = 'Die Primel Eiscafé';
     
-    // Get the table data
     const table = document.querySelector('.schedule-table');
     if (!table) {
         alert('Kein Stundenplan zum Senden vorhanden.');
         return;
     }
     
-    // Extract table content
     const rows = table.querySelectorAll('tr');
     
-    // Get headers (days)
     const headers = [];
     const firstRow = rows[0];
     const headerCells = firstRow.querySelectorAll('th');
     headerCells.forEach((cell, index) => {
-        if (index > 0) { // Skip first column "Uhrzeit / Tag"
+        if (index > 0) {
             headers.push(cell.innerText.trim());
         }
     });
     
-    // Get hours and data
-    const hours = [];
     const daysData = {};
-    
-    // Initialize days data
     headers.forEach(day => {
         daysData[day] = [];
     });
     
-    // Process each row (skip header row)
     for (let i = 1; i < rows.length; i++) {
         const cells = rows[i].querySelectorAll('td, th');
         if (cells.length === 0) continue;
         
-        // First cell is hour
         const hourCell = cells[0];
         let hourText = hourCell.innerText.trim();
-        // Clean hour text
         hourText = hourText.replace(':00 -', '-').replace(':00', '');
         
-        // Process each day's data
         for (let j = 1; j < cells.length; j++) {
             const dayIndex = j - 1;
             if (dayIndex < headers.length) {
                 const day = headers[dayIndex];
-                let cellText = cells[j].innerText.trim();
-                
-                // Clean cell text - remove extra spaces and newlines
-                cellText = cellText.replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
-                
-                // Parse workers
-                let workers = [];
-                if (cellText !== '-' && cellText !== '—' && cellText !== '') {
-                    // Extract worker names from chips
-                    const workerSpans = cells[j].querySelectorAll('.worker-chip');
-                    if (workerSpans.length > 0) {
-                        workerSpans.forEach(span => {
-                            workers.push(span.innerText.trim());
-                        });
-                    } else if (cellText !== '-' && cellText !== '—') {
-                        workers = [cellText];
-                    }
+                const workers = [];
+                const workerSpans = cells[j].querySelectorAll('.worker-chip');
+                if (workerSpans.length > 0) {
+                    workerSpans.forEach(span => {
+                        workers.push(span.innerText.trim());
+                    });
                 }
                 
                 daysData[day].push({
@@ -189,10 +195,8 @@ function sendToWhatsApp() {
         }
     }
     
-    // Build WhatsApp message
     let message = `🏪 *${cafeName}*\n📅 *${scheduleName}*\n\n`;
     
-    // Add each day separately
     headers.forEach(day => {
         const dayData = daysData[day];
         if (dayData && dayData.length > 0) {
@@ -211,15 +215,11 @@ function sendToWhatsApp() {
         }
     });
     
-    // Add footer
     message += `📅 *Erstellt:* ${new Date().toLocaleString('de-DE')}\n`;
     message += `🏪 *Die Primel Eiscafé*`;
     
-    // Encode for WhatsApp
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/?text=${encodedMessage}`;
-    
-    // Open WhatsApp
     window.open(whatsappUrl, '_blank');
 }
 
@@ -588,133 +588,4 @@ function escapeHtml(str) {
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#39;');
-// Initialize WhatsApp button
-function initWhatsAppButton() {
-    const whatsappBtn = document.getElementById('whatsappBtn');
-    console.log('WhatsApp button found:', whatsappBtn);
-    
-    if (whatsappBtn) {
-        const newBtn = whatsappBtn.cloneNode(true);
-        whatsappBtn.parentNode.replaceChild(newBtn, whatsappBtn);
-        newBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            sendToWhatsApp();
-        });
-        console.log('WhatsApp button initialized');
-    } else {
-        console.log('WhatsApp button NOT found!');
-    }
-}
-
-// Send schedule via WhatsApp
-function sendToWhatsApp() {
-    // Get current schedule info
-    const scheduleName = document.getElementById('currentScheduleName').textContent;
-    const cafeName = 'Die Primel Eiscafé';
-    
-    // Get the table data
-    const table = document.querySelector('.schedule-table');
-    if (!table) {
-        alert('Kein Stundenplan zum Senden vorhanden.');
-        return;
-    }
-    
-    // Extract table content
-    const rows = table.querySelectorAll('tr');
-    
-    // Get headers (days)
-    const headers = [];
-    const firstRow = rows[0];
-    const headerCells = firstRow.querySelectorAll('th');
-    headerCells.forEach((cell, index) => {
-        if (index > 0) { // Skip first column "Uhrzeit / Tag"
-            headers.push(cell.innerText.trim());
-        }
-    });
-    
-    // Get hours and data
-    const hours = [];
-    const daysData = {};
-    
-    // Initialize days data
-    headers.forEach(day => {
-        daysData[day] = [];
-    });
-    
-    // Process each row (skip header row)
-    for (let i = 1; i < rows.length; i++) {
-        const cells = rows[i].querySelectorAll('td, th');
-        if (cells.length === 0) continue;
-        
-        // First cell is hour
-        const hourCell = cells[0];
-        let hourText = hourCell.innerText.trim();
-        // Clean hour text
-        hourText = hourText.replace(':00 -', '-').replace(':00', '');
-        
-        // Process each day's data
-        for (let j = 1; j < cells.length; j++) {
-            const dayIndex = j - 1;
-            if (dayIndex < headers.length) {
-                const day = headers[dayIndex];
-                let cellText = cells[j].innerText.trim();
-                
-                // Clean cell text - remove extra spaces and newlines
-                cellText = cellText.replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
-                
-                // Parse workers
-                let workers = [];
-                if (cellText !== '-' && cellText !== '—' && cellText !== '') {
-                    // Extract worker names from chips
-                    const workerSpans = cells[j].querySelectorAll('.worker-chip');
-                    if (workerSpans.length > 0) {
-                        workerSpans.forEach(span => {
-                            workers.push(span.innerText.trim());
-                        });
-                    } else if (cellText !== '-' && cellText !== '—') {
-                        workers = [cellText];
-                    }
-                }
-                
-                daysData[day].push({
-                    hour: hourText,
-                    workers: workers
-                });
-            }
-        }
-    }
-    
-    // Build WhatsApp message
-    let message = `🏪 *${cafeName}*\n📅 *${scheduleName}*\n\n`;
-    
-    // Add each day separately
-    headers.forEach(day => {
-        const dayData = daysData[day];
-        if (dayData && dayData.length > 0) {
-            message += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
-            message += `📆 *${day.toUpperCase()}*\n`;
-            message += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
-            
-            dayData.forEach(slot => {
-                if (slot.workers.length > 0) {
-                    message += `${slot.hour} • ${slot.workers.join(', ')}\n`;
-                } else {
-                    message += `${slot.hour} • —\n`;
-                }
-            });
-            message += `\n`;
-        }
-    });
-    
-    // Add footer
-    message += `📅 *Erstellt:* ${new Date().toLocaleString('de-DE')}\n`;
-    message += `🏪 *Die Primel Eiscafé*`;
-    
-    // Encode for WhatsApp
-    const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `https://wa.me/?text=${encodedMessage}`;
-    
-    // Open WhatsApp
-    window.open(whatsappUrl, '_blank');
-}
 }
