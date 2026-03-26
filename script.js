@@ -3,19 +3,17 @@
 let currentWorkers = [];
 let currentScheduleData = {};
 let currentCellCallback = null;
+let currentDisplayMode = 'current'; // 'current' or 'next'
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
     initHamburgerMenu();
     
-    // Display current week info
+    // Display current week info in header
     const dateInfoElement = document.getElementById('currentDateInfo');
     if (dateInfoElement) {
-        const now = new Date();
-        const weekNumber = getCurrentWeekNumber();
-        const month = now.toLocaleString('de-DE', { month: 'long' });
-        const year = now.getFullYear();
-        dateInfoElement.textContent = `Stundenplan für KW ${weekNumber} | ${month} ${year}`;
+        const formattedDate = getFormattedWeekInfo(0);
+        dateInfoElement.textContent = `Stundenplan für ${formattedDate}`;
     }
     
     // Check which page we're on
@@ -47,38 +45,58 @@ function initHamburgerMenu() {
     }
 }
 
-// Index Page
+// ========== INDEX PAGE ==========
 function initIndexPage() {
-    const schedules = getSchedules();
-    const scheduleNames = Object.keys(schedules);
+    // Load current week schedule by default
+    loadDisplaySchedule('current');
+    initToggleButton();
+    initIndexPdfButton();
+}
+
+function loadDisplaySchedule(mode) {
+    currentDisplayMode = mode;
+    let scheduleName = null;
     
-    if (scheduleNames.length === 0) {
-        document.getElementById('scheduleTableWrapper').innerHTML = '<div class="loading">Kein Stundenplan vorhanden. Bitte erstellen Sie zuerst einen Stundenplan im Admin-Bereich.</div>';
-        document.getElementById('currentScheduleName').textContent = '-';
+    if (mode === 'current') {
+        scheduleName = getCurrentWeekSchedule();
+    } else {
+        scheduleName = getNextWeekSchedule();
+    }
+    
+    if (!scheduleName) {
+        document.getElementById('scheduleTableWrapper').innerHTML = '<div class="loading">Kein Stundenplan für diese Woche vorhanden. Bitte im Admin-Bereich einen Plan zuweisen.</div>';
+        document.getElementById('currentScheduleName').textContent = getFormattedWeekInfo(mode === 'current' ? 0 : 1);
         return;
     }
     
-    let currentName = getCurrentScheduleName();
-    let scheduleData = null;
-    
-    if (!currentName || !schedules[currentName]) {
-        currentName = scheduleNames[scheduleNames.length - 1];
-        setCurrentScheduleName(currentName);
-    }
-    
-    scheduleData = schedules[currentName];
+    const scheduleData = getScheduleData(scheduleName);
     
     if (scheduleData) {
-        document.getElementById('currentScheduleName').textContent = currentName;
+        const displayTitle = getFormattedWeekInfo(mode === 'current' ? 0 : 1);
+        document.getElementById('currentScheduleName').textContent = displayTitle;
         currentWorkers = getWorkers();
         renderScheduleTableReadOnly(scheduleData);
-        initIndexPdfButton();
     } else {
-        document.getElementById('scheduleTableWrapper').innerHTML = '<div class="loading">Fehler beim Laden des Stundenplans.</div>';
+        document.getElementById('scheduleTableWrapper').innerHTML = '<div class="loading">Stundenplan konnte nicht geladen werden.</div>';
+        document.getElementById('currentScheduleName').textContent = getFormattedWeekInfo(mode === 'current' ? 0 : 1);
     }
 }
 
-// Initialize PDF button on index page
+function initToggleButton() {
+    const toggleBtn = document.getElementById('toggleWeekBtn');
+    if (toggleBtn) {
+        toggleBtn.addEventListener('click', () => {
+            if (currentDisplayMode === 'current') {
+                loadDisplaySchedule('next');
+                toggleBtn.textContent = '← Aktuelle Woche';
+            } else {
+                loadDisplaySchedule('current');
+                toggleBtn.textContent = 'Nächste Woche →';
+            }
+        });
+    }
+}
+
 function initIndexPdfButton() {
     const pdfBtn = document.getElementById('exportPdfBtn');
     if (pdfBtn) {
@@ -91,98 +109,19 @@ function initIndexPdfButton() {
     }
 }
 
-// Export schedule as PDF
-// Export schedule as PDF
 function exportToPDF() {
     const tableWrapper = document.querySelector('.table-wrapper');
-    const scheduleNameElement = document.getElementById('currentScheduleName');
-    const scheduleName = scheduleNameElement ? scheduleNameElement.textContent : 'Stundenplan';
-    
-    // Get current date info
-    const dateInfoElement = document.getElementById('currentDateInfo');
-    const dateInfo = dateInfoElement ? dateInfoElement.textContent : '';
-    
-    // Get current week number, month and year
-    const now = new Date();
-    const weekNumber = getCurrentWeekNumber();
-    const month = now.toLocaleString('de-DE', { month: 'long' });
-    const year = now.getFullYear();
-    const formattedDate = `${month} ${year} | KW ${weekNumber}`;
+    const scheduleName = document.getElementById('currentScheduleName').textContent;
     
     if (!tableWrapper || tableWrapper.innerHTML.includes('Kein Stundenplan') || tableWrapper.innerHTML.includes('Lade Stundenplan')) {
         alert('Kein Stundenplan zum Exportieren vorhanden.');
         return;
     }
     
-    // Create a temporary container for better print layout
     const originalTitle = document.title;
     document.title = `${scheduleName} - Die Primel Eiscafé`;
-    
-    // Add a temporary style for print
-    const style = document.createElement('style');
-    style.textContent = `
-        @media print {
-            .pdf-header {
-                display: block !important;
-                text-align: center;
-                margin-bottom: 20px;
-                padding: 10px;
-            }
-            .pdf-header h1 {
-                color: #667eea;
-                font-size: 18px;
-                margin: 0;
-            }
-            .pdf-header .pdf-subtitle {
-                font-size: 14px;
-                color: #666;
-                margin: 5px 0;
-            }
-            .pdf-header .pdf-schedule-name {
-                font-size: 16px;
-                font-weight: bold;
-                margin: 10px 0;
-            }
-            .pdf-header .pdf-date-info {
-                font-size: 12px;
-                color: #888;
-                margin-top: 5px;
-            }
-        }
-    `;
-    document.head.appendChild(style);
-    
-    // Add header info to the page temporarily for printing
-    const mainContent = document.querySelector('.main-content');
-    const existingHeader = document.getElementById('pdfPrintHeader');
-    if (existingHeader) {
-        existingHeader.remove();
-    }
-    
-    const printHeader = document.createElement('div');
-    printHeader.id = 'pdfPrintHeader';
-    printHeader.className = 'pdf-header';
-    printHeader.style.display = 'none';
-    printHeader.innerHTML = `
-        <h1>Die Primel Eiscafé</h1>
-        <div class="pdf-subtitle">Stundenplan</div>
-        <div class="pdf-schedule-name">${escapeHtml(scheduleName)}</div>
-        <div class="pdf-date-info">${dateInfo || formattedDate}</div>
-    `;
-    
-    // Insert header at the beginning of main content
-    mainContent.insertBefore(printHeader, mainContent.firstChild);
-    
-    // Show header for print
-    printHeader.style.display = 'block';
-    
-    // Print
     window.print();
-    
-    // Clean up
     setTimeout(() => {
-        printHeader.remove();
-        style.remove();
         document.title = originalTitle;
     }, 1000);
 }
@@ -198,11 +137,11 @@ function renderScheduleTableReadOnly(scheduleData) {
         hours.push(`${i}:00 - ${i+1}:00`);
     }
     
-    let html = '<table class="schedule-table"><thead><tr><th>Uhrzeit / Tag</th>';
+    let html = '<table class="schedule-table"><thead>资本<th>Uhrzeit / Tag</th>';
     days.forEach(day => {
         html += `<th>${day}</th>`;
     });
-    html += '</tr></thead><tbody>';
+    html += ' </thead><tbody>';
     
     hours.forEach(hour => {
         html += `<tr><th>${hour}</th>`;
@@ -217,7 +156,6 @@ function renderScheduleTableReadOnly(scheduleData) {
     wrapper.innerHTML = html;
 }
 
-// Render cell content with worker chips
 function renderCellContent(workers) {
     if (!workers || workers.length === 0) {
         return '<div class="cell-workers"><span style="color:#999;">-</span></div>';
@@ -237,7 +175,7 @@ function renderCellContent(workers) {
     return `<div class="cell-workers">${chips.join('')}</div>`;
 }
 
-// Admin Page
+// ========== ADMIN PAGE ==========
 function initAdminPage() {
     loadWorkers();
     loadScheduleFilter();
@@ -254,6 +192,12 @@ function initAdminPage() {
     
     const loadBtn = document.getElementById('loadScheduleBtn');
     if (loadBtn) loadBtn.addEventListener('click', loadSelectedSchedule);
+    
+    const setCurrentBtn = document.getElementById('setAsCurrentWeekBtn');
+    if (setCurrentBtn) setCurrentBtn.addEventListener('click', setAsCurrentWeek);
+    
+    const setNextBtn = document.getElementById('setAsNextWeekBtn');
+    if (setNextBtn) setNextBtn.addEventListener('click', setAsNextWeek);
     
     const modal = document.getElementById('workerModal');
     if (modal) {
@@ -274,6 +218,26 @@ function initAdminPage() {
             });
         }
     }
+}
+
+function setAsCurrentWeek() {
+    const currentScheduleName = getCurrentScheduleName();
+    if (!currentScheduleName) {
+        alert('Kein Stundenplan geladen. Bitte laden oder speichern Sie zuerst einen Plan.');
+        return;
+    }
+    setCurrentWeekSchedule(currentScheduleName);
+    alert(`"${currentScheduleName}" wurde als aktueller Wochenplan gespeichert.`);
+}
+
+function setAsNextWeek() {
+    const currentScheduleName = getCurrentScheduleName();
+    if (!currentScheduleName) {
+        alert('Kein Stundenplan geladen. Bitte laden oder speichern Sie zuerst einen Plan.');
+        return;
+    }
+    setNextWeekSchedule(currentScheduleName);
+    alert(`"${currentScheduleName}" wurde als nächster Wochenplan gespeichert.`);
 }
 
 function loadWorkers() {
@@ -386,26 +350,26 @@ function renderScheduleTable(scheduleData, readonly = false) {
         hours.push(`${i}:00 - ${i+1}:00`);
     }
     
-    let html = '<table class="schedule-table"><thead><tr><th>Uhrzeit / Tag</th>';
+    let html = '<table class="schedule-table"><thead>资本<th>Uhrzeit / Tag</th>';
     days.forEach(day => {
         html += `<th>${day}</th>`;
     });
-    html += '</tr></thead><tbody>';
+    html += ' </thead><tbody>';
     
     hours.forEach(hour => {
         html += `<tr><th>${hour}</th>`;
         days.forEach(day => {
             const workers = scheduleData[day]?.[hour] || [];
             if (readonly) {
-                html += `<td>${renderCellContent(workers)}</td>`;
+                html += `<td>${renderCellContent(workers)}一面`;
             } else {
                 html += `<td class="editable-cell" data-day="${day}" data-hour="${hour}">${renderCellContent(workers)}</td>`;
             }
         });
-        html += '</tr>';
+        html += '同行';
     });
     
-    html += '</tbody></table>';
+    html += '</tbody>\\table';
     wrapper.innerHTML = html;
     
     if (!readonly) {
@@ -469,8 +433,10 @@ function saveCurrentSchedule() {
         currentScheduleData = getEmptySchedule();
     }
     
-    saveSchedule(name, currentScheduleData);
+    saveScheduleWithName(name, currentScheduleData);
+    setCurrentScheduleName(name);
     loadScheduleFilter();
+    document.getElementById('scheduleFilter').value = name;
     document.getElementById('saveScheduleName').value = '';
     alert(`Stundenplan "${name}" wurde gespeichert.`);
 }
@@ -511,6 +477,7 @@ function loadSelectedSchedule() {
         currentScheduleData = scheduleData;
         renderScheduleTable(currentScheduleData, false);
         setCurrentScheduleName(selectedName);
+        document.getElementById('saveScheduleName').value = selectedName;
     } else {
         alert('Stundenplan konnte nicht geladen werden');
     }
