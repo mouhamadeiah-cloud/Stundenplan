@@ -126,55 +126,94 @@ function sendToWhatsApp() {
     
     // Extract table content
     const rows = table.querySelectorAll('tr');
-    let message = `🏪 *${cafeName}*\n📅 *${scheduleName}*\n\n`;
-    message += `┌─────────────────────────────────────────┐\n`;
     
-    let rowCount = 0;
-    rows.forEach((row) => {
-        const cells = row.querySelectorAll('th, td');
-        const rowData = [];
-        cells.forEach(cell => {
-            let cellText = cell.innerText.trim();
-            // Clean up cell text
-            cellText = cellText.replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
-            if (cellText === '-' || cellText === '—' || cellText === '') {
-                cellText = '─';
-            }
-            // Limit text length
-            if (cellText.length > 12) {
-                cellText = cellText.substring(0, 10) + '..';
-            }
-            rowData.push(cellText);
-        });
-        
-        if (rowData.length > 0) {
-            if (rowCount === 0) {
-                // Header row
-                message += `│ ${rowData[0].padEnd(12)} │`;
-                for (let i = 1; i < rowData.length; i++) {
-                    message += ` ${rowData[i].padEnd(10)} │`;
-                }
-                message += `\n├─────────────────────────────────────────┤\n`;
-            } else {
-                // Data rows
-                message += `│ ${rowData[0].padEnd(12)} │`;
-                for (let i = 1; i < rowData.length; i++) {
-                    let cellValue = rowData[i];
-                    if (cellValue.includes(' ')) {
-                        // Multiple workers
-                        cellValue = cellValue.split(' ').join('+');
-                    }
-                    message += ` ${cellValue.padEnd(10)} │`;
-                }
-                message += `\n`;
-            }
-            rowCount++;
+    // Get headers (days)
+    const headers = [];
+    const firstRow = rows[0];
+    const headerCells = firstRow.querySelectorAll('th');
+    headerCells.forEach((cell, index) => {
+        if (index > 0) { // Skip first column "Uhrzeit / Tag"
+            headers.push(cell.innerText.trim());
         }
     });
     
-    message += `└─────────────────────────────────────────┘\n`;
-    message += `\n📅 *Erstellt:* ${new Date().toLocaleString('de-DE')}`;
-    message += `\n💬 *Die Primel Eiscafé*`;
+    // Get hours and data
+    const hours = [];
+    const daysData = {};
+    
+    // Initialize days data
+    headers.forEach(day => {
+        daysData[day] = [];
+    });
+    
+    // Process each row (skip header row)
+    for (let i = 1; i < rows.length; i++) {
+        const cells = rows[i].querySelectorAll('td, th');
+        if (cells.length === 0) continue;
+        
+        // First cell is hour
+        const hourCell = cells[0];
+        let hourText = hourCell.innerText.trim();
+        // Clean hour text
+        hourText = hourText.replace(':00 -', '-').replace(':00', '');
+        
+        // Process each day's data
+        for (let j = 1; j < cells.length; j++) {
+            const dayIndex = j - 1;
+            if (dayIndex < headers.length) {
+                const day = headers[dayIndex];
+                let cellText = cells[j].innerText.trim();
+                
+                // Clean cell text - remove extra spaces and newlines
+                cellText = cellText.replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
+                
+                // Parse workers
+                let workers = [];
+                if (cellText !== '-' && cellText !== '—' && cellText !== '') {
+                    // Extract worker names from chips
+                    const workerSpans = cells[j].querySelectorAll('.worker-chip');
+                    if (workerSpans.length > 0) {
+                        workerSpans.forEach(span => {
+                            workers.push(span.innerText.trim());
+                        });
+                    } else if (cellText !== '-' && cellText !== '—') {
+                        workers = [cellText];
+                    }
+                }
+                
+                daysData[day].push({
+                    hour: hourText,
+                    workers: workers
+                });
+            }
+        }
+    }
+    
+    // Build WhatsApp message
+    let message = `🏪 *${cafeName}*\n📅 *${scheduleName}*\n\n`;
+    
+    // Add each day separately
+    headers.forEach(day => {
+        const dayData = daysData[day];
+        if (dayData && dayData.length > 0) {
+            message += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+            message += `📆 *${day.toUpperCase()}*\n`;
+            message += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+            
+            dayData.forEach(slot => {
+                if (slot.workers.length > 0) {
+                    message += `${slot.hour} • ${slot.workers.join(', ')}\n`;
+                } else {
+                    message += `${slot.hour} • —\n`;
+                }
+            });
+            message += `\n`;
+        }
+    });
+    
+    // Add footer
+    message += `📅 *Erstellt:* ${new Date().toLocaleString('de-DE')}\n`;
+    message += `🏪 *Die Primel Eiscafé*`;
     
     // Encode for WhatsApp
     const encodedMessage = encodeURIComponent(message);
