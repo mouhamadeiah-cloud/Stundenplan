@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Admin - Die Primel Eiscafé</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#667eea">
 </head>
 <body>
     <div class="app-container">
@@ -65,6 +63,13 @@
                     <button id="saveScheduleBtn" class="btn btn-primary">Speichern</button>
                     <button id="clearScheduleBtn" class="btn btn-danger">Komplett leeren</button>
                 </div>
+                
+                <!-- Week Assignment Buttons -->
+                <div class="week-assign-buttons" style="display: flex; gap: 10px; margin: 15px 0; flex-wrap: wrap;">
+                    <button id="setAsCurrentWeekBtn" class="btn btn-week-assign">📅 Als aktuelle Woche speichern</button>
+                    <button id="setAsNextWeekBtn" class="btn btn-week-assign">📅 Als nächste Woche speichern</button>
+                </div>
+                
                 <div class="table-wrapper" id="scheduleTableWrapper">
                     <div class="loading">Lade Tabelle...</div>
                 </div>
