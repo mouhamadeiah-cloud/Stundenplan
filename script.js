@@ -588,7 +588,6 @@ function escapeHtml(str) {
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#39;');
-}
 // Initialize WhatsApp button
 function initWhatsAppButton() {
     const whatsappBtn = document.getElementById('whatsappBtn');
@@ -717,4 +716,5 @@ function sendToWhatsApp() {
     
     // Open WhatsApp
     window.open(whatsappUrl, '_blank');
+}
 }
