@@ -112,38 +112,6 @@ function initIndexPdfButton() {
     }
 }
 
-function initWhatsAppButton() {
-    const whatsappBtn = document.getElementById('whatsappBtn');
-    if (whatsappBtn) {
-        const newBtn = whatsappBtn.cloneNode(true);
-        whatsappBtn.parentNode.replaceChild(newBtn, whatsappBtn);
-        newBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            sendToWhatsApp();
-        });
-        console.log('WhatsApp button initialized');
-    } else {
-        console.log('WhatsApp button not found');
-    }
-}
-
-function exportToPDF() {
-    const tableWrapper = document.querySelector('.table-wrapper');
-    const scheduleName = document.getElementById('currentScheduleName').textContent;
-    
-    if (!tableWrapper || tableWrapper.innerHTML.includes('Kein Stundenplan') || tableWrapper.innerHTML.includes('Lade Stundenplan')) {
-        alert('Kein Stundenplan zum Exportieren vorhanden.');
-        return;
-    }
-    
-    const originalTitle = document.title;
-    document.title = `${scheduleName} - Die Primel Eiscafé`;
-    window.print();
-    setTimeout(() => {
-        document.title = originalTitle;
-    }, 1000);
-}
-
 function sendToWhatsApp() {
     // Get current schedule info
     const scheduleName = document.getElementById('currentScheduleName').textContent;
@@ -158,53 +126,55 @@ function sendToWhatsApp() {
     
     // Extract table content
     const rows = table.querySelectorAll('tr');
-    let message = `🏪 ${cafeName}\n📅 ${scheduleName}\n\n`;
-    message += `═══════════════════════════════════════════\n`;
+    let message = `🏪 *${cafeName}*\n📅 *${scheduleName}*\n\n`;
+    message += `┌─────────────────────────────────────────┐\n`;
     
-    rows.forEach((row, index) => {
+    let rowCount = 0;
+    rows.forEach((row) => {
         const cells = row.querySelectorAll('th, td');
         const rowData = [];
         cells.forEach(cell => {
             let cellText = cell.innerText.trim();
+            // Clean up cell text
             cellText = cellText.replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
             if (cellText === '-' || cellText === '—' || cellText === '') {
-                cellText = '✗';
+                cellText = '─';
+            }
+            // Limit text length
+            if (cellText.length > 12) {
+                cellText = cellText.substring(0, 10) + '..';
             }
             rowData.push(cellText);
         });
         
         if (rowData.length > 0) {
-            if (index === 0) {
-                // Header
-                message += `${rowData[0]}\t`;
+            if (rowCount === 0) {
+                // Header row
+                message += `│ ${rowData[0].padEnd(12)} │`;
                 for (let i = 1; i < rowData.length; i++) {
-                    message += `${rowData[i]}\t`;
+                    message += ` ${rowData[i].padEnd(10)} │`;
                 }
-                message += `\n${'─'.repeat(50)}\n`;
+                message += `\n├─────────────────────────────────────────┤\n`;
             } else {
                 // Data rows
-                let timeSlot = rowData[0];
-                message += `${timeSlot.padEnd(12)} │ `;
-                let hasWorkers = false;
+                message += `│ ${rowData[0].padEnd(12)} │`;
                 for (let i = 1; i < rowData.length; i++) {
-                    if (rowData[i] !== '✗') {
-                        message += `👤 ${rowData[i]}  `;
-                        hasWorkers = true;
-                    } else {
-                        message += `◻  `;
+                    let cellValue = rowData[i];
+                    if (cellValue.includes(' ')) {
+                        // Multiple workers
+                        cellValue = cellValue.split(' ').join('+');
                     }
-                }
-                if (!hasWorkers) {
-                    message += `(frei)`;
+                    message += ` ${cellValue.padEnd(10)} │`;
                 }
                 message += `\n`;
             }
+            rowCount++;
         }
     });
     
-    message += `═══════════════════════════════════════════\n`;
-    message += `📅 Erstellt: ${new Date().toLocaleString('de-DE')}\n`;
-    message += `🏪 Die Primel Eiscafé`;
+    message += `└─────────────────────────────────────────┘\n`;
+    message += `\n📅 *Erstellt:* ${new Date().toLocaleString('de-DE')}`;
+    message += `\n💬 *Die Primel Eiscafé*`;
     
     // Encode for WhatsApp
     const encodedMessage = encodeURIComponent(message);
