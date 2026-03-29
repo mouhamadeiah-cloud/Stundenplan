@@ -392,50 +392,37 @@ body {
     flex-wrap: wrap;
 }
 
-/* --- تعديل المسافات بين الفلاتر وأزرار الحفظ --- */
-
-.filter-section {
-    background: white;
-    border-radius: 12px 12px 0 0; /* زوايا دائرية من الأعلى فقط */
-    padding: 1rem;
-    margin-bottom: 0; /* إلغاء المسافة تحت حقل التحميل */
-    border-bottom: 1px solid #eee; /* خط خفيف للفصل */
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    align-items: center;
-}
-
+/* تقليل المسافات بين الأقسام */
+.filter-section, 
 .schedule-actions {
     background: white;
-    border-radius: 0 0 12px 12px; /* زوايا دائرية من الأسفل فقط */
-    padding: 1rem;
-    margin-top: 0; /* إلغاء المسافة فوق حقل الاسم الجديد */
-    margin-bottom: 1rem; /* مسافة فقط تحت الكتلة كاملة */
+    border-radius: 12px;
+    padding: 0.6rem 1rem; /* تقليل الحشو الداخلي */
+    margin-bottom: 0.5rem; /* تقليل المسافة تحت القسم */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 8px; /* مسافة ثابتة وصغيرة بين العناصر داخل القسم */
     align-items: center;
 }
 
-/* توحيد أحجام العناصر بداخلهم */
+/* جعل حقول الإدخال والـ Select بنفس الحجم */
 .filter-section select, 
-.schedule-actions input[type="text"] {
-    flex: 1;
-    min-width: 140px;
-    padding: 8px;
+.schedule-actions input {
+    flex: 1; /* تأخذ مساحة متساوية */
+    min-width: 150px;
+    padding: 6px 10px;
     border: 1px solid #ddd;
     border-radius: 6px;
+    font-size: 0.85rem;
 }
 
-/* تنسيق الأزرار لتكون متناسقة */
-.filter-section .btn,
+/* تنسيق الأزرار لتكون بجانب بعضها مباشرة */
+.filter-section .btn, 
 .schedule-actions .btn {
+    padding: 6px 12px;
     margin: 0;
-    height: 38px; /* توحيد الارتفاع */
-    display: flex;
-    align-items: center;
-}
+    white-space: nowrap;
 }
 /* Table Styles */
 .table-wrapper {
