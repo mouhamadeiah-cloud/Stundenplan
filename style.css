@@ -392,38 +392,38 @@ body {
     flex-wrap: wrap;
 }
 
-/* Schedule Actions */
+/* تقليل المسافات بين الأقسام */
+.filter-section, 
 .schedule-actions {
+    background: white;
+    border-radius: 12px;
+    padding: 0.6rem 1rem; /* تقليل الحشو الداخلي */
+    margin-bottom: 0.5rem; /* تقليل المسافة تحت القسم */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-bottom: 0.8rem;
-}
-
-.schedule-actions input {
-    flex: 2;
-    padding: 0.5rem;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 0.8rem;
-}
-
-.filter-section {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: 8px; /* مسافة ثابتة وصغيرة بين العناصر داخل القسم */
     align-items: center;
 }
 
-.filter-section select {
-    flex: 2;
-    padding: 0.5rem;
+/* جعل حقول الإدخال والـ Select بنفس الحجم */
+.filter-section select, 
+.schedule-actions input {
+    flex: 1; /* تأخذ مساحة متساوية */
+    min-width: 150px;
+    padding: 6px 10px;
     border: 1px solid #ddd;
     border-radius: 6px;
-    font-size: 0.8rem;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.85rem;
 }
 
+/* تنسيق الأزرار لتكون بجانب بعضها مباشرة */
+.filter-section .btn, 
+.schedule-actions .btn {
+    padding: 6px 12px;
+    margin: 0;
+    white-space: nowrap;
+}
 /* Table Styles */
 .table-wrapper {
     overflow-x: auto;
