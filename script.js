@@ -44,6 +44,36 @@ function initHamburgerMenu() {
         });
     }
 }
+// تفعيل زر الحذف
+const deleteBtn = document.getElementById('deleteScheduleBtn');
+if (deleteBtn) {
+    deleteBtn.addEventListener('click', () => {
+        const filter = document.getElementById('scheduleFilter');
+        const selectedName = filter.value;
+
+        if (!selectedName) {
+            alert("Bitte wählen Sie zuerst einen Plan aus، den Sie löschen möchten.");
+            return;
+        }
+
+        if (confirm(`Sind Sie sicher, dass Sie den Plan "${selectedName}" unwiderruflich löschen möchten?`)) {
+            // استدعاء دالة الحذف من ملف storage.js
+            deleteOldSchedule(selectedName);
+            
+            // إذا كان الجدول المحذوف هو نفسه المعروض حالياً، قم بتفريغ الشاشة
+            if (currentEditingName === selectedName) {
+                currentScheduleData = getEmptySchedule();
+                renderScheduleTable(currentScheduleData, false);
+                document.getElementById('saveScheduleName').value = '';
+                currentEditingName = "";
+            }
+
+            // تحديث القائمة المنسدلة لإزالة الاسم منها
+            loadScheduleFilter();
+            alert(`Plan "${selectedName}" wurde gelöscht.`);
+        }
+    });
+}
 
 // ========== INDEX PAGE ==========
 function initIndexPage() {
