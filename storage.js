@@ -166,3 +166,16 @@ function getEmptySchedule() {
     });
     return schedule;
 }
+function deleteOldSchedule(name) {
+    try {
+        const schedules = getSchedules();
+        if (schedules[name]) {
+            delete schedules[name];
+            localStorage.setItem(STORAGE_KEYS.SCHEDULES, JSON.stringify(schedules));
+            return true;
+        }
+    } catch (e) {
+        console.error('Error deleting schedule:', e);
+    }
+    return false;
+}
